@@ -143,6 +143,19 @@ export default function App() {
     showToast("Today's log cleared");
   }, [setDays, showToast]);
 
+  const toggleReminders = useCallback(() => {
+    if (interval > 0) {
+      setIntervalMins(0);
+      showToast("Reminders turned off");
+      return;
+    }
+    setIntervalMins(60);
+    if (typeof Notification !== "undefined" && Notification.permission === "default") {
+      Notification.requestPermission();
+    }
+    showToast("🔔 Reminders on — every 60 min");
+  }, [interval, setIntervalMins, showToast]);
+
   const notify = useCallback(
     (body) => {
       const title = "💧 Time to hydrate!";
@@ -228,8 +241,25 @@ export default function App() {
 
         <DrinkLog entries={entries} onDelete={deleteEntry} onReset={resetDay} />
 
-        <footer className="text-center text-muted text-[12.5px] font-bold md:col-span-2">
-          {interval > 0 ? `Reminding you every ${interval} min` : "Reminders off — turn them on in settings ⚙️"}
+        <footer className="md:col-span-2 flex justify-center">
+          {interval > 0 ? (
+            <div className="flex items-center gap-2 text-muted text-[12.5px] font-bold">
+              <span>🔔 Reminding you every {interval} min</span>
+              <button
+                onClick={toggleReminders}
+                className="underline hover:text-accent transition"
+              >
+                Turn off
+              </button>
+            </div>
+          ) : (
+            <button
+              onClick={toggleReminders}
+              className="inline-flex items-center gap-2 bg-soft2 border border-line text-ink rounded-full py-2 px-4 font-extrabold text-[13px] hover:bg-soft hover:-translate-y-px active:scale-95 transition"
+            >
+              🔔 Turn on reminders
+            </button>
+          )}
         </footer>
       </main>
 
