@@ -12,6 +12,8 @@ export default function SettingsSheet({
   setSound,
   theme,
   setTheme,
+  dark,
+  setDark,
   onTestReminder,
 }) {
   const [perm, setPerm] = useState(
@@ -48,11 +50,11 @@ export default function SettingsSheet({
 
   return (
     <div
-      className="fixed inset-0 z-40 bg-ink/35 backdrop-blur-sm flex items-end justify-center md:items-center md:p-6"
+      className="fixed inset-0 z-40 bg-[#0a1424]/45 backdrop-blur-sm flex items-end justify-center md:items-center md:p-6"
       onClick={onClose}
     >
       <aside
-        className="relative z-50 w-full max-w-[460px] bg-white rounded-t-[26px] md:rounded-[24px] md:max-w-[440px] p-5 flex flex-col gap-4 shadow-[0_-16px_50px_rgba(20,50,88,0.25)] max-h-[88vh] overflow-y-auto animate-slide-up md:animate-pop-in"
+        className="relative z-50 w-full max-w-[460px] bg-card rounded-t-[26px] md:rounded-[24px] md:max-w-[440px] p-5 flex flex-col gap-4 shadow-[0_-16px_50px_rgba(20,50,88,0.25)] max-h-[88vh] overflow-y-auto animate-slide-up md:animate-pop-in"
         role="dialog"
         aria-modal="true"
         aria-label="Settings"
@@ -152,7 +154,22 @@ export default function SettingsSheet({
               onChange={(e) => setSound(e.target.checked)}
               aria-label="Sound on add"
             />
-            <span className="absolute inset-0 rounded-full bg-[#d6e2f2] transition-colors peer-checked:bg-accent" />
+            <span className="absolute inset-0 rounded-full bg-[#d6e2f2] dark:bg-[#33425c] transition-colors peer-checked:bg-accent" />
+            <span className="absolute top-1 left-1 w-5 h-5 rounded-full bg-white shadow-[0_2px_4px_rgba(0,0,0,0.2)] transition-transform peer-checked:translate-x-[22px]" />
+          </label>
+        </div>
+
+        <div className="flex items-center justify-between font-extrabold text-sm">
+          <span>Dark mode</span>
+          <label className="relative inline-flex w-[50px] h-7 shrink-0 cursor-pointer">
+            <input
+              type="checkbox"
+              className="peer sr-only"
+              checked={dark}
+              onChange={(e) => setDark(e.target.checked)}
+              aria-label="Dark mode"
+            />
+            <span className="absolute inset-0 rounded-full bg-[#d6e2f2] dark:bg-[#33425c] transition-colors peer-checked:bg-accent" />
             <span className="absolute top-1 left-1 w-5 h-5 rounded-full bg-white shadow-[0_2px_4px_rgba(0,0,0,0.2)] transition-transform peer-checked:translate-x-[22px]" />
           </label>
         </div>

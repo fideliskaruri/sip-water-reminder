@@ -65,7 +65,7 @@ export default function WaterGauge({ amount, goal }) {
         <circle cx={CX} cy={CY} r={RING_R} className="fill-none stroke-soft [stroke-width:12]" />
 
         {/* water */}
-        <circle cx={CX} cy={CY} r={R} className="[fill:#eef6ff]" />
+        <circle cx={CX} cy={CY} r={R} className="fill-soft" />
         {hasWater && (
           <g clipPath="url(#waterClip)">
             <path d={w2} fill="url(#waterGrad)" opacity="0.5" />
@@ -85,7 +85,7 @@ export default function WaterGauge({ amount, goal }) {
       </svg>
 
       <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
-        <div className="flex flex-col items-center bg-white/75 backdrop-blur-sm border border-white/70 rounded-[8cqw] px-[8cqw] py-[4cqw] text-ink shadow-soft">
+        <div className="flex flex-col items-center bg-white/75 dark:bg-[#0f1d33]/70 backdrop-blur-sm border border-white/70 dark:border-white/10 rounded-[8cqw] px-[8cqw] py-[4cqw] text-ink shadow-soft">
           <span className="text-[17cqw] font-extrabold leading-none tracking-tight">{pct}%</span>
           <span className="text-[5.4cqw] font-extrabold opacity-85 mt-[2cqw] whitespace-nowrap">
             {Math.round(amount)} / {goal} ml

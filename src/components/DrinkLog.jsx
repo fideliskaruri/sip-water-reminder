@@ -24,14 +24,14 @@ export default function DrinkLog({ entries, onDelete, onReset }) {
               key={e.id}
             >
               <div className="flex items-center gap-[11px]">
-                <span className="w-[34px] h-[34px] rounded-[10px] bg-[#eaf3ff] grid place-items-center text-[17px]">
+                <span className="w-[34px] h-[34px] rounded-[10px] bg-[#eaf3ff] dark:bg-[#1d3052] grid place-items-center text-[17px]">
                   {e.emo || "💧"}
                 </span>
                 <span className="font-extrabold text-ink">{e.amount} ml</span>
                 <span className="text-muted text-[13px] font-bold">{formatTime(e.ts)}</span>
               </div>
               <button
-                className="text-[#b9c8dd] text-base p-1 rounded-lg hover:text-danger hover:bg-[#fff0f2]"
+                className="text-[#b9c8dd] dark:text-[#5e7390] text-base p-1 rounded-lg hover:text-danger hover:bg-[#fff0f2] dark:hover:bg-[#3a1f28]"
                 onClick={() => onDelete(e.id)}
                 aria-label="Delete entry"
               >

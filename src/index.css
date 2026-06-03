@@ -1,5 +1,8 @@
 @import "tailwindcss";
 
+/* Enable class-based dark mode (toggled via .dark on <html>). */
+@custom-variant dark (&:where(.dark, .dark *));
+
 /* ---- Design tokens (exposed as Tailwind utilities, e.g. bg-accent, text-ink) ---- */
 @theme {
   --color-ink: #143258;
@@ -11,6 +14,7 @@
   --color-line: #e6eefb;
   --color-soft: #eff6ff;
   --color-soft2: #f7fafe;
+  --color-card: #ffffff;
 
   --radius-card: 26px;
 
@@ -36,6 +40,25 @@
 /* ---- Base ---- */
 :root { --accent-glow: rgba(47, 143, 255, 0.35); }
 html, body, #root { height: 100%; }
+html { color-scheme: light; }
+.dark { color-scheme: dark; }
+
+/* ---- Dark theme: override the semantic tokens; accent stays user-chosen ---- */
+.dark {
+  --color-ink: #e8f1fd;
+  --color-muted: #8ea7c7;
+  --color-line: #263750;
+  --color-soft: #1b2c49;
+  --color-soft2: #16263f;
+  --color-card: #111f38;
+}
+.dark body {
+  background:
+    radial-gradient(900px 600px at 85% -5%, #102a4d 0%, transparent 55%),
+    radial-gradient(800px 600px at -10% 100%, #0c2740 0%, transparent 55%),
+    linear-gradient(180deg, #0a1626 0%, #0c1a2e 100%);
+}
+.dark ::-webkit-scrollbar-thumb { background: #2b3b54; }
 body {
   font-family: var(--font-sans);
   color: var(--color-ink);

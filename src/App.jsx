@@ -11,6 +11,12 @@ import { applyTheme, DEFAULT_THEME } from "./utils/theme.js";
 
 const EMOJI = { 150: "🥃", 250: "🥤", 350: "🧉", 500: "🍶" };
 
+function getSystemDark() {
+  return typeof window !== "undefined" && window.matchMedia
+    ? window.matchMedia("(prefers-color-scheme: dark)").matches
+    : false;
+}
+
 function sumDay(entries) {
   return (entries || []).reduce((t, e) => t + e.amount, 0);
 }
@@ -31,11 +37,16 @@ export default function App() {
   const [interval, setIntervalMins] = usePersistentState("sip.interval", 0);
   const [sound, setSound] = usePersistentState("sip.sound", true);
   const [theme, setTheme] = usePersistentState("sip.theme", DEFAULT_THEME);
+  const [dark, setDark] = usePersistentState("sip.dark", getSystemDark());
   const [days, setDays] = usePersistentState("sip.days", {});
 
   useEffect(() => {
     applyTheme(theme);
   }, [theme]);
+
+  useEffect(() => {
+    document.documentElement.classList.toggle("dark", dark);
+  }, [dark]);
 
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [toast, setToast] = useState("");
@@ -160,7 +171,7 @@ export default function App() {
 
   return (
     <div className="min-h-[100dvh] flex justify-center items-start md:items-center px-0 sm:px-4 py-0 sm:py-6">
-      <main className="w-full max-w-[460px] md:max-w-[880px] min-[1100px]:max-w-[940px] bg-white shadow-card rounded-none sm:rounded-card p-4 sm:p-5 md:p-7 min-h-[100dvh] sm:min-h-0 flex flex-col gap-4 sm:gap-5 md:grid md:grid-cols-2 md:gap-x-8 md:gap-y-6 md:items-start">
+      <main className="w-full max-w-[460px] md:max-w-[880px] min-[1100px]:max-w-[940px] bg-card shadow-card rounded-none sm:rounded-card p-4 sm:p-5 md:p-7 min-h-[100dvh] sm:min-h-0 flex flex-col gap-4 sm:gap-5 md:grid md:grid-cols-2 md:gap-x-8 md:gap-y-6 md:items-start">
         <header className="flex items-center justify-between md:col-span-2">
           <div className="flex items-center gap-3">
             <span className="w-11 h-11 grid place-items-center rounded-[14px] text-[22px] bg-gradient-to-br from-accent2 to-accent shadow-[0_8px_18px_var(--accent-glow)] animate-bob">
@@ -171,13 +182,23 @@ export default function App() {
               <p className="text-muted text-[12.5px] mt-px">Stay hydrated, feel great</p>
             </div>
           </div>
-          <button
-            className="w-[42px] h-[42px] rounded-[13px] border border-line bg-soft2 text-ink text-[17px] hover:bg-soft active:scale-90 transition"
-            onClick={() => setSettingsOpen(true)}
-            aria-label="Settings"
-          >
-            ⚙️
-          </button>
+          <div className="flex items-center gap-2">
+            <button
+              className="w-[42px] h-[42px] rounded-[13px] border border-line bg-soft2 text-ink text-[17px] hover:bg-soft active:scale-90 transition"
+              onClick={() => setDark((d) => !d)}
+              aria-label={dark ? "Switch to light mode" : "Switch to dark mode"}
+              title={dark ? "Light mode" : "Dark mode"}
+            >
+              {dark ? "☀️" : "🌙"}
+            </button>
+            <button
+              className="w-[42px] h-[42px] rounded-[13px] border border-line bg-soft2 text-ink text-[17px] hover:bg-soft active:scale-90 transition"
+              onClick={() => setSettingsOpen(true)}
+              aria-label="Settings"
+            >
+              ⚙️
+            </button>
+          </div>
         </header>
 
         <div className="flex flex-col gap-4 sm:gap-5">
@@ -223,11 +244,13 @@ export default function App() {
         setSound={setSound}
         theme={theme}
         setTheme={setTheme}
-        onTestReminder={() => notify("This is what a reminder looks like 💦")}
+        dark={dark}
+        setDark={setDark}
+        onTestReminder={() => notify("This is what a reminder looks like 🥛")}
       />
 
       <div
-        className={`fixed bottom-[22px] left-1/2 z-[60] bg-ink text-white px-5 py-3 rounded-[14px] font-extrabold text-sm shadow-card pointer-events-none transition-all duration-[350ms] ease-[cubic-bezier(0.22,1,0.36,1)] ${
+        className={`fixed bottom-[22px] left-1/2 z-[60] bg-ink text-white dark:bg-[#1c2c47] dark:border dark:border-line px-5 py-3 rounded-[14px] font-extrabold text-sm shadow-card pointer-events-none transition-all duration-[350ms] ease-[cubic-bezier(0.22,1,0.36,1)] ${
           toast ? "opacity-100 -translate-x-1/2 translate-y-0" : "opacity-0 -translate-x-1/2 translate-y-[60px]"
         }`}
       >

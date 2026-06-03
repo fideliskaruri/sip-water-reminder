@@ -31,7 +31,7 @@ export default function QuickAdd({ onAdd, onUndo, canUndo }) {
         {PRESETS.map((p) => (
           <button
             key={p.amt}
-            className={`group bg-soft2 border border-line text-ink rounded-2xl py-3.5 px-1.5 max-[360px]:py-3 max-[360px]:px-1 flex flex-col items-center gap-[3px] font-extrabold text-[13px] max-[360px]:text-xs transition hover:-translate-y-[3px] hover:bg-[#eaf3ff] hover:border-[#cfe2ff] hover:shadow-soft active:scale-95 ${
+            className={`group bg-soft2 border border-line text-ink rounded-2xl py-3.5 px-1.5 max-[360px]:py-3 max-[360px]:px-1 flex flex-col items-center gap-[3px] font-extrabold text-[13px] max-[360px]:text-xs transition hover:-translate-y-[3px] hover:bg-[#eaf3ff] dark:hover:bg-[#1d3052] hover:border-[#cfe2ff] dark:hover:border-[#34507d] hover:shadow-soft active:scale-95 ${
               popped === p.amt ? "animate-pop" : ""
             }`}
             onClick={() => fireAdd(p.amt)}
@@ -49,7 +49,7 @@ export default function QuickAdd({ onAdd, onUndo, canUndo }) {
           max="3000"
           inputMode="numeric"
           placeholder="Custom ml"
-          className="flex-1 min-w-0 bg-soft2 border border-line rounded-[14px] py-3 px-4 text-ink text-[15px] placeholder:text-[#9fb3cd] focus:outline-none focus:border-accent focus:ring-[3px] focus:ring-accent/15"
+          className="flex-1 min-w-0 bg-soft2 border border-line rounded-[14px] py-3 px-4 text-ink text-[15px] placeholder:text-[#9fb3cd] dark:placeholder:text-[#6a829f] focus:outline-none focus:border-accent focus:ring-[3px] focus:ring-accent/15"
           value={custom}
           onChange={(e) => setCustom(e.target.value)}
           onKeyDown={(e) => e.key === "Enter" && addCustom()}
