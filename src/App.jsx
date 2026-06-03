@@ -3,6 +3,7 @@ import WaterGauge from "./components/WaterGauge.jsx";
 import QuickAdd from "./components/QuickAdd.jsx";
 import DrinkLog from "./components/DrinkLog.jsx";
 import SettingsSheet from "./components/SettingsSheet.jsx";
+import Tour from "./components/Tour.jsx";
 import { usePersistentState } from "./hooks/usePersistentState.js";
 import { todayKey, prevKey } from "./utils/date.js";
 import { playSip } from "./utils/sound.js";
@@ -10,6 +11,33 @@ import { burstConfetti } from "./utils/confetti.js";
 import { applyTheme, DEFAULT_THEME } from "./utils/theme.js";
 
 const EMOJI = { 150: "🥃", 250: "🥤", 350: "🧉", 500: "🍶" };
+
+const TOUR_STEPS = [
+  {
+    title: "Welcome to Sip 👋",
+    body: "A calm little tracker to help you stay hydrated. Here's a quick 20-second tour.",
+  },
+  {
+    selector: '[data-tour="progress"]',
+    title: "Your daily progress",
+    body: "This ring fills as you drink. The stats show how much you have left, cups, and your day streak.",
+  },
+  {
+    selector: '[data-tour="quickadd"]',
+    title: "Log a drink",
+    body: "Tap a preset to log it instantly, or type a custom amount. Made a mistake? Hit the undo button.",
+  },
+  {
+    selector: '[data-tour="reminders"]',
+    title: "Gentle reminders",
+    body: "Tap the bell to get nudged every hour. Turn it off anytime with the same button.",
+  },
+  {
+    selector: '[data-tour="settings"]',
+    title: "Make it yours",
+    body: "Set your goal, pick a primary color, switch to dark mode — and replay this tour whenever you like.",
+  },
+];
 
 function getSystemDark() {
   return typeof window !== "undefined" && window.matchMedia
@@ -38,7 +66,11 @@ export default function App() {
   const [sound, setSound] = usePersistentState("sip.sound", true);
   const [theme, setTheme] = usePersistentState("sip.theme", DEFAULT_THEME);
   const [dark, setDark] = usePersistentState("sip.dark", getSystemDark());
+  const [tourDone, setTourDone] = usePersistentState("sip.tourDone", false);
   const [days, setDays] = usePersistentState("sip.days", {});
+
+  const [tourOpen, setTourOpen] = useState(false);
+  const tourInit = useRef(false);
 
   useEffect(() => {
     applyTheme(theme);
@@ -47,6 +79,21 @@ export default function App() {
   useEffect(() => {
     document.documentElement.classList.toggle("dark", dark);
   }, [dark]);
+
+  // Show the tour once, on the very first visit.
+  useEffect(() => {
+    if (tourInit.current) return;
+    tourInit.current = true;
+    if (!tourDone) {
+      const t = setTimeout(() => setTourOpen(true), 600);
+      return () => clearTimeout(t);
+    }
+  }, [tourDone]);
+
+  const closeTour = useCallback(() => {
+    setTourOpen(false);
+    setTourDone(true);
+  }, [setTourDone]);
 
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [toast, setToast] = useState("");
@@ -198,6 +245,7 @@ export default function App() {
           <div className="flex items-center gap-2">
             <button
               onClick={toggleReminders}
+              data-tour="reminders"
               aria-label={interval > 0 ? "Turn off reminders" : "Turn on reminders"}
               aria-pressed={interval > 0}
               title={interval > 0 ? `Reminders on — every ${interval} min` : "Turn on reminders"}
@@ -220,6 +268,7 @@ export default function App() {
             <button
               className="w-[42px] h-[42px] rounded-[13px] border border-line bg-soft2 text-ink text-[17px] hover:bg-soft active:scale-90 transition"
               onClick={() => setSettingsOpen(true)}
+              data-tour="settings"
               aria-label="Settings"
             >
               ⚙️
@@ -228,7 +277,7 @@ export default function App() {
         </header>
 
         <div className="flex flex-col gap-4 sm:gap-5">
-          <section className="flex flex-col items-center gap-3 sm:gap-4">
+          <section data-tour="progress" className="flex flex-col items-center gap-3 sm:gap-4">
             <WaterGauge amount={total} goal={goal} />
             <div className="grid grid-cols-3 w-full bg-soft2 border border-line rounded-[18px] overflow-hidden">
               <div className="py-3.5 px-1.5 text-center">
@@ -249,7 +298,9 @@ export default function App() {
             </div>
           </section>
 
-          <QuickAdd onAdd={addDrink} onUndo={undoLast} canUndo={entries.length > 0} />
+          <div data-tour="quickadd">
+            <QuickAdd onAdd={addDrink} onUndo={undoLast} canUndo={entries.length > 0} />
+          </div>
         </div>
 
         <DrinkLog entries={entries} onDelete={deleteEntry} onReset={resetDay} />
@@ -272,6 +323,10 @@ export default function App() {
         setTheme={setTheme}
         dark={dark}
         setDark={setDark}
+        onReplayTour={() => {
+          setSettingsOpen(false);
+          setTourOpen(true);
+        }}
         onTestReminder={() => notify("This is what a reminder looks like 🥛")}
       />
 
@@ -283,6 +338,8 @@ export default function App() {
         {toast}
       </div>
       <canvas ref={confettiRef} className="fixed inset-0 z-[55] pointer-events-none" />
+
+      {tourOpen && <Tour steps={TOUR_STEPS} onClose={closeTour} />}
     </div>
   );
 }

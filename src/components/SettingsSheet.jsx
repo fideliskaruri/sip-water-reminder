@@ -14,6 +14,7 @@ export default function SettingsSheet({
   setTheme,
   dark,
   setDark,
+  onReplayTour,
   onTestReminder,
 }) {
   const [perm, setPerm] = useState(
@@ -179,6 +180,13 @@ export default function SettingsSheet({
           onClick={onTestReminder}
         >
           Send a test reminder
+        </button>
+
+        <button
+          className="w-full bg-soft2 border border-line text-ink rounded-[14px] py-3 px-4 font-extrabold transition hover:bg-soft active:scale-[0.97]"
+          onClick={onReplayTour}
+        >
+          Replay tutorial 🎈
         </button>
       </aside>
     </div>
