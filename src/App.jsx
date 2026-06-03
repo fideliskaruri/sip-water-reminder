@@ -197,6 +197,19 @@ export default function App() {
           </div>
           <div className="flex items-center gap-2">
             <button
+              onClick={toggleReminders}
+              aria-label={interval > 0 ? "Turn off reminders" : "Turn on reminders"}
+              aria-pressed={interval > 0}
+              title={interval > 0 ? `Reminders on — every ${interval} min` : "Turn on reminders"}
+              className={`w-[42px] h-[42px] rounded-[13px] border text-[17px] active:scale-90 transition ${
+                interval > 0
+                  ? "bg-accent text-white border-transparent shadow-[0_8px_18px_var(--accent-glow)]"
+                  : "border-line bg-soft2 text-ink hover:bg-soft"
+              }`}
+            >
+              {interval > 0 ? "🔔" : "🔕"}
+            </button>
+            <button
               className="w-[42px] h-[42px] rounded-[13px] border border-line bg-soft2 text-ink text-[17px] hover:bg-soft active:scale-90 transition"
               onClick={() => setDark((d) => !d)}
               aria-label={dark ? "Switch to light mode" : "Switch to dark mode"}
@@ -241,25 +254,8 @@ export default function App() {
 
         <DrinkLog entries={entries} onDelete={deleteEntry} onReset={resetDay} />
 
-        <footer className="md:col-span-2 flex justify-center">
-          {interval > 0 ? (
-            <div className="flex items-center gap-2 text-muted text-[12.5px] font-bold">
-              <span>🔔 Reminding you every {interval} min</span>
-              <button
-                onClick={toggleReminders}
-                className="underline hover:text-accent transition"
-              >
-                Turn off
-              </button>
-            </div>
-          ) : (
-            <button
-              onClick={toggleReminders}
-              className="inline-flex items-center gap-2 bg-soft2 border border-line text-ink rounded-full py-2 px-4 font-extrabold text-[13px] hover:bg-soft hover:-translate-y-px active:scale-95 transition"
-            >
-              🔔 Turn on reminders
-            </button>
-          )}
+        <footer className="md:col-span-2 text-center text-muted text-[12.5px] font-bold">
+          {interval > 0 ? `🔔 Reminding you every ${interval} min` : "Reminders are off — tap 🔕 to turn on"}
         </footer>
       </main>
 
