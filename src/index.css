@@ -1,0 +1,54 @@
+@import "tailwindcss";
+
+/* ---- Design tokens (exposed as Tailwind utilities, e.g. bg-accent, text-ink) ---- */
+@theme {
+  --color-ink: #143258;
+  --color-muted: #50688a;
+  --color-accent: #2f8fff;
+  --color-accent2: #5bd1ff;
+  --color-good: #1fbf86;
+  --color-danger: #ff6b7d;
+  --color-line: #e6eefb;
+  --color-soft: #eff6ff;
+  --color-soft2: #f7fafe;
+
+  --radius-card: 26px;
+
+  --shadow-card: 0 14px 38px rgba(28, 78, 145, 0.12);
+  --shadow-soft: 0 6px 18px rgba(28, 78, 145, 0.08);
+
+  --font-sans: "Nunito", system-ui, -apple-system, sans-serif;
+
+  /* animation tokens -> animate-bob, animate-pop, animate-slide-in, ... */
+  --animate-bob: bob 3s ease-in-out infinite;
+  --animate-pop: pop 0.4s ease;
+  --animate-slide-in: slideIn 0.3s ease;
+  --animate-slide-up: slideUp 0.32s cubic-bezier(0.22, 1, 0.36, 1);
+  --animate-pop-in: popIn 0.28s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@keyframes bob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
+@keyframes pop { 0% { transform: scale(1); } 40% { transform: scale(1.12); } 100% { transform: scale(1); } }
+@keyframes slideIn { from { opacity: 0; transform: translateY(-8px); } to { opacity: 1; transform: none; } }
+@keyframes slideUp { from { transform: translateY(100%); } to { transform: none; } }
+@keyframes popIn { from { opacity: 0; transform: translateY(12px) scale(0.97); } to { opacity: 1; transform: none; } }
+
+/* ---- Base ---- */
+:root { --accent-glow: rgba(47, 143, 255, 0.35); }
+html, body, #root { height: 100%; }
+body {
+  font-family: var(--font-sans);
+  color: var(--color-ink);
+  background:
+    radial-gradient(900px 600px at 85% -5%, #d6ecff 0%, transparent 55%),
+    radial-gradient(800px 600px at -10% 100%, #d8fbf3 0%, transparent 55%),
+    linear-gradient(180deg, #eaf4ff 0%, #f6fbff 100%);
+  background-attachment: fixed;
+}
+::selection { background: rgba(47, 143, 255, 0.18); }
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-thumb { background: #cdddf2; border-radius: 6px; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+}
